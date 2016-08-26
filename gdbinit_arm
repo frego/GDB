@@ -1,0 +1,194 @@
+set confirm off
+set verbose off
+# Disable Press <enter> to continue message.
+set pagination off 
+
+set prompt \033[31mgdb$ \033[0m
+
+# Reload config
+def config
+    source ~/.gdbinit
+end
+
+#####################################################################
+# Stepping.                                                         #
+#####################################################################
+
+define t
+    stepi
+    reg
+end
+
+define p
+    nexti
+    reg
+end
+
+define g
+    continue
+    reg
+end
+
+define gu
+    finish
+    reg
+end
+
+#####################################################################
+# Breakpoints.                                                      #
+#####################################################################
+
+define bpsave
+    save breakpoints ~/.breakpoints
+end
+
+define bp
+    break *$arg0
+end
+
+define bl
+    info breakpoints
+end
+
+define bc
+    del $arg0
+end
+
+define bd
+    disable $arg0
+end
+
+#####################################################################
+# Output.                                                           #
+#####################################################################
+
+define libs
+    info sharedlibrary
+end
+
+define map
+    maintenance info sections
+end
+
+define reg
+    printf "-------------------------------------------------------------------\n"
+    printf "[ "
+
+    echo \033[32m
+    printf "R00:"
+    echo \033[0m
+    printf " 0x%08X ", $r0
+
+    echo \033[32m
+    printf "R01:"
+    echo \033[0m
+    printf " 0x%08X ", $r1
+
+    echo \033[32m
+    printf "R02:"
+    echo \033[0m
+    printf " 0x%08X ", $r2
+
+    echo \033[32m
+    printf "R03:"
+    echo \033[0m
+    printf " 0x%08X ", $r3
+
+    printf "]\n[ "
+
+    echo \033[32m
+    printf "R04:"
+    echo \033[0m
+    printf " 0x%08X ", $r4
+
+    echo \033[32m
+    printf "R05:"
+    echo \033[0m
+    printf " 0x%08X ", $r5
+
+    echo \033[32m
+    printf "R06:"
+    echo \033[0m
+    printf " 0x%08X ", $r6
+
+    echo \033[32m
+    printf "R07:"
+    echo \033[0m
+    printf " 0x%08X ", $r7
+
+    printf "]\n[ "
+
+    echo \033[32m
+    printf "R08:"
+    echo \033[0m
+    printf " 0x%08X ", $r8
+
+    echo \033[32m
+    printf "R09:"
+    echo \033[0m
+    printf " 0x%08X ", $r9
+
+    echo \033[32m
+    printf "R10:"
+    echo \033[0m
+    printf " 0x%08X ", $r10
+
+    echo \033[32m
+    printf "R11:"
+    echo \033[0m
+    printf " 0x%08X ", $r11
+ 
+    printf "]\n[ "
+
+    echo \033[32m
+    printf "R12:"
+    echo \033[0m
+    printf " 0x%08X ", $r12
+
+    echo \033[32m
+    printf "*SP:"
+    echo \033[0m
+    printf " 0x%08X ", $sp
+
+    echo \033[32m
+    printf "*LR:"
+    echo \033[0m
+    printf " 0x%08X ", $lr
+
+    echo \033[32m
+    printf "*PC:"
+    echo \033[0m
+    printf " 0x%08X ", $pc
+
+    printf "]\n\n"
+
+    next_instructions
+    printf "-------------------------------------------------------------------\n"
+end
+
+define next_instructions
+    echo \033[33m
+    x/4i $pc
+    echo \033[0m
+end
+
+define r
+    reg
+end
+
+define connect
+    target remote 192.168.22.2:1234
+end
+
+#####################################################################
+# ARM                                                               #       
+#####################################################################
+
+define arm
+    set arm force-mode arm
+end
+
+define thumb
+    set arm force-mode thumb
+end
+
